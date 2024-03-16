@@ -17,7 +17,7 @@ const uploadMiddleware = multer({ dest: 'uploads/' });
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.JWT_SECRET || '5225sdgsdfgsf'; // Use environment variable for secret
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet()); // Add helmet middleware for security headers
