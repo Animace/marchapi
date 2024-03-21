@@ -117,7 +117,7 @@ app.get('/profile', (req, res) => {
 
 app.post('/logout', (req, res) => {
     console.log('User logged out');
-    res.cookie('token', '').json('ok');
+    res.clearCookie('token').json('ok'); // Clear cookie instead of setting it to empty string
 });
 
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
