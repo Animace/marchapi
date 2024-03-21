@@ -17,15 +17,26 @@ const uploadMiddleware = multer({ dest: 'uploads/' });
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.JWT_SECRET || '5225sdgsdfgsf'; // Use environment variable for secret
 
-// Specify the allowed origin
-const allowedOrigins = ['http://localhost:3000']; // Add more origins as needed
+const allowedOrigins = ['http://localhost:3000', '*']; // Specify the full URL of your Netlify app
 app.use(cors({ origin: allowedOrigins, credentials: true }));
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(helmet()); // Add helmet middleware for security headers
+app.use(helmet());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/myapp'); // Use environment variable for database connection string
+// Middleware to set CORS headers for image requests
+app.use((req, res, next) => {
+  // Check if the request is for images
+  if (req.originalUrl.startsWith('/uploads')) {
+    // Set CORS headers for image requests
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  }
+  next();
+});
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/myapp');
+ // Use environment variable for database connection string
 
 // Error handling middleware
 app.use((err, req, res, next) => {
